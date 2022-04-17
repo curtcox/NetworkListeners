@@ -1,9 +1,10 @@
 package com.curtcox;
 
-import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.stream.*;
+
+import static com.curtcox.Util.*;
 
 final class DhcpMessage {
 
@@ -21,51 +22,6 @@ final class DhcpMessage {
 
     static DhcpMessage parse(byte[] bytes) {
         return new DhcpMessage(bytes);
-    }
-
-    static String hexdump(byte[] bytes) {
-        StringBuilder out1 = new StringBuilder();
-        StringBuilder out2 = new StringBuilder();
-        for (int i=0; i<bytes.length; i++) {
-            byte b = bytes[i];
-            if (i>1024 || b==-1) {
-                break;
-            } else {
-                out1.append(" " + index(i));
-                out2.append(" " + hex(b));
-            }
-        }
-        return out1 + "\n" + out2;
-    }
-
-    static String hex(byte[] bytes) {
-        StringBuilder out = new StringBuilder();
-        for (byte b : bytes) {
-            out.append(" " + hex(b));
-        }
-        return out.toString();
-    }
-
-    static String index(int i) {
-        String s = "  " + i;
-        return s.substring(s.length() - 2);
-    }
-
-    static String hex(byte b) { return String.format("%02x", b); }
-
-    String printable() {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        for (int i=0; i<bytes.length; i++) {
-            byte b = bytes[i];
-            if (b==-1) {
-                break;
-            } else {
-                if (printable(b)) {
-                    out.write(b);
-                }
-            }
-        }
-        return new String(out.toByteArray());
     }
 
     String head() { return next(bytes,0,42); }
@@ -158,35 +114,12 @@ final class DhcpMessage {
 
     String mac() { return hex(nextBytes(bytes,28,6)); }
 
-    static String next(byte[] bytes, int start, int maxLength) {
-        return hexdump(nextBytes(bytes,start,maxLength));
-    }
-
-    static byte[] nextBytes(byte[] bytes, int start, int maxLength) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        for (int i=start; i<bytes.length; i++) {
-            byte b = bytes[i];
-            if (b==-1 || out.size() == maxLength) {
-                break;
-            } else {
-                out.write(b);
-            }
-        }
-        return out.toByteArray();
-    }
-
-    static boolean printable(byte b) { return b >= 32 && b < 128; }
-
-    static String printableChar(byte b) {
-        return printable(b) ? new String(new byte[] {b}) : "?";
-    }
-
     public String dump() {
         return  head() + "\n" +
                 tail() + "\n" +
                 mac() + "\n" +
                 optionsString() + "\n" +
-                printable() + "\n" +
+                printable(bytes) + "\n" +
                 messageType() + "\n" +
                 hostName() + "\n" +
                 requestedIpAddress();

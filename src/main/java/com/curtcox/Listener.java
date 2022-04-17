@@ -22,7 +22,7 @@ final class Listener {
             try {
                 listenTo(new DatagramSocket(port,null),handler);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(handler + " on " + port,e);
             }
         }).start();
     }
