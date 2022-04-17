@@ -21,8 +21,7 @@ final class MdnsMessage {
     }
 
     public String toString() {
-        return hexdump(bytes) + "\n" +
-                printable(bytes);
+        return hexdump(bytes) + "\n" + printable(bytes);
     }
 
 }

@@ -1,12 +1,13 @@
 package com.curtcox;
 
+import static com.curtcox.Listener.listenTo;
+
 public final class Main {
 
-    static void listenToDhcp() { Listener.listenTo(67,new DhcpMessage.Parser()); }
-    static void listenToMdns() { Listener.listenTo(5353,new MdnsMessage.Parser()); }
-
     public static void main(String[] args) {
-        listenToDhcp();
-        listenToMdns();
+        listenTo(67,new DhcpMessage.Parser());
+        //listenTo(1900,new UpnpMessage.Parser());
+        listenTo(1900,new UpnpMessage.Parser());
+        listenTo(3702,new GenericMessage.Parser());
     }
 }
