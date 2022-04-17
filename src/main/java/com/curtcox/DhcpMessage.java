@@ -7,6 +7,12 @@ import java.util.stream.*;
 
 final class DhcpMessage {
 
+    final static class Parser implements PackerHandler {
+
+        @Override
+        public String parse(byte[] bytes) { return DhcpMessage.parse(bytes).toString(); }
+    }
+
     private final byte[] bytes;
 
     DhcpMessage(byte[] bytes) {
